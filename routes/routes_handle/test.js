@@ -10,9 +10,9 @@ let FirstUse = require('../../config').firstUse;
 
 
 async function test(ctx, next) {
-    // let res = await mongoTest()
-    // //console.log(res.auth)
-    // ctx.body = res
+    let res = await mongoTest()
+    console.log(res.deletedCount)
+    ctx.body = res
     // FirstUse = 0;
 
     // let account = {
@@ -57,10 +57,10 @@ async function test(ctx, next) {
     // console.log(res)
     // console.log(jsonFile.firstUse)
 
-    let a = {email: "123@ss.com"}
-    a.location = '/'+a.email
-    let res = await fs.mkdir('./storage'+a.location)
-    console.log(res === undefined)
+    // let a = {email: "123@ss.com"}
+    // a.location = '/'+a.email
+    // let res = await fs.mkdir('./storage'+a.location)
+    // console.log(res === undefined)
 
     // let list = await fs.readdir('./')
     // for (const file of list)

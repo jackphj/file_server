@@ -18,11 +18,10 @@ async function test() {
     // });
 
 
-
-    let temp2 = {
-        name: "caa"
-        //pwd: crypto.createHash('md5').update("test").digest('hex'),
-    }
+    // let temp2 = {
+    //     name: "caa"
+    //     //pwd: crypto.createHash('md5').update("test").digest('hex'),
+    // }
 
     // let a = await validation(temp)
     // console.log(a.num===0)
@@ -42,18 +41,25 @@ async function test() {
     // }
 
 
-    let res = await user.find(temp2);
-    console.log(res.length)
-    if (res.length === 0) {
-        new Error("user not found");
-        return 102;
-    } else if (res.length > 1) {
-        console.log("multi-user error");
-        return 103;
-    } else {
-        console.log(res)
-        return res;
+    // let res = await user.find(temp2);
+    // console.log(res.length)
+    // if (res.length === 0) {
+    //     new Error("user not found");
+    //     return 102;
+    // } else if (res.length > 1) {
+    //     console.log("multi-user error");
+    //     return 103;
+    // } else {
+    //     console.log(res)
+    //     return res;
+    // }
+
+    let temp3 = {
+        name: "qq_2_test3",
+        email: "12345@qq.com"
     }
+    let res = await user.deleteOne(temp3)
+    return res
 
     //return 'succeed test!';
 

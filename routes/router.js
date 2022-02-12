@@ -4,6 +4,9 @@ const Multer = require('@koa/multer');
 const login = require('./routes_handle/login')
 const test = require('./routes_handle/test')
 const register = require('./routes_handle/register')
+const userControl = require('./routes_handle/userControl')
+const verify = require("../components/id-verify");
+
 const router = new Router();
 
 /*TODO:
@@ -27,10 +30,8 @@ router
         await register(ctx, next);
         await next();
     })
-    .get('/list', async (ctx, next) => {
-        tokenPayload = {"name": "pp"};
-        token = jwt.sign(tokenPayload, 'jcd', {expiresIn: 36000});
-        ctx.body = {token: 'bearer ' + token};
+    .post('/userControl', async (ctx, next) => {
+        await userControl(ctx, next)
         await next();
     })
 

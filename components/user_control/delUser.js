@@ -6,70 +6,82 @@ const user = require('../mongo').user
 *   mainUser : admin
 *   userDel : user to be delete
 * @return
-*   201: succeed
-*   202: main user error
-*   203: user error
-*   204: auth error
+*   101: succeed
+*   102: main user error
+*   103: user error
+*   104: auth error
+*   105: else error
 *  */
 async function delUser(mainUser, userDel) {
-    /*if (mianUser == null) {
-        //let result = await user.deleteOne()
-    }*/
+    let res = {};
+    let resFind = await user.find(mainUser);
+    let resFindDel = await user.find(userDel);
 
-    //main user auth check & check main user whether legal or not
-    let Auth = 0;
-    let group = "";
-    user.find(mainUser).then((userCheck) => {
-        if (userCheck.length > 1) {
-            console.log("多个相同账户 Muti main user")
-            return 202;
-        } else if (userCheck.length < 1) {
-            console.log("无此账号 No main user")
-            return 202;
-        } else {
-            Auth = userCheck.auth;
-            group = userCheck.email;
-        }
-    }).catch((err) => {
-        console.log(err);
-    });
+    if (resFindDel.length !== 1) {
 
-    user.find(userDel).then((res) => {
-        if (res.length === 1) {
-            if (res.email !== group) {
-                console.log("没有权限 Insufficient permissions")
-                return 204;
-            }
-        } else if (res > 1) {
-            console.log("多个相同账户 Muti user");
-            return 203;
-        } else {
-            console.log("用户不存在 User not exists");
-            return 203;
-        }
-    }).catch((err) => {
-        console.log(err);
-    });
+        res.code = 103;
+        res.msg = 'user error';
 
-    //delete and user which it create
-    user.find({group: group}).then((res) => {
+    } else {
+        if (resFind.length === 1) {
 
-        for (let userToDel in res) {
-            user.delete(userToDel.toObject).then((result) => {
-                if (result === userToDel) {
-                    console.log("成功 Succeed")
-                    return 101;
+            if (resFind[0].auth === 1) {
+                if (resFindDel[0].auth === 1 && resFind[0].group === "root" && resFindDel[0].group === "admin") {       //delete admin
+                    let res1 = await user.deleteOne(userDel);
+                    if (res1.deletedCount === 1) {
+                        res.code = 101;
+                        res.msg = 'succeed';
+                    } else {
+                        res.code = 105;
+                        res.msg = 'else error';
+                    }
+                    let res2 = await user.deleteMany({group: resFindDel[0].email})
+                    if (res2.deletedCount >= 0) {
+                        res.code = 101;
+                        res.msg = 'succeed';
+                    } else {
+                        res.code = 105;
+                        res.msg = 'else error';
+                    }
+                } else if (resFindDel[0].auth !== 1) {                                                                  //delete else
+                    let res1 = await user.deleteOne(userDel);
+                    if (res1.deletedCount === 1) {
+                        res.code = 101;
+                        res.msg = 'succeed';
+                    } else {
+                        res.code = 105;
+                        res.msg = 'else error';
+                    }
                 } else {
-                    console.log("其他问题 Else error")
-                    return 107;
+                    res.code = 104;
+                    res.msg = 'auth error';
                 }
-            }).catch((err) => {
-                console.log(err);
-            })
-        }
-    })
 
+            } else if (resFind[0].auth === 2) {                                                                         //delete else
+                if (resFindDel[0].auth > resFind[0].auth && resFindDel[0].group === resFind[0].group) {
+                    let res1 = await user.deleteOne(userDel);
+                    if (res1.deletedCount === 1) {
+                        res.code = 101;
+                        res.msg = 'succeed';
+                    } else {
+                        res.code = 105;
+                        res.msg = 'else error';
+                    }
+                } else {
+                    res.code = 104;
+                    res.msg = 'auth error';
+                }
+            } else {
+                res.code = 104;
+                res.msg = 'auth error';
+            }
+
+        } else {
+            res.code = 102;
+            res.msg = 'main user error';
+        }
+    }
 
 }
 
-module.exports={delUser}
+module.exports = delUser
