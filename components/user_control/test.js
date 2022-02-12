@@ -19,10 +19,10 @@ async function test() {
 
 
 
-    // let temp2 = {
-    //     name: "aba"
-    //     //pwd: crypto.createHash('md5').update("test").digest('hex'),
-    // }
+    let temp2 = {
+        name: "caa"
+        //pwd: crypto.createHash('md5').update("test").digest('hex'),
+    }
 
     // let a = await validation(temp)
     // console.log(a.num===0)
@@ -37,21 +37,23 @@ async function test() {
     // console.log(err)
 
     // let res = await temp.save();
-    // if (res == temp) {
-    //     console.log('save')
+    // if (res === temp) {
+    //     console.log(res)
     // }
-    //
 
-    // let res = await user.find(accout);
-    // if (res.length === 0) {
-    //     new Error("user not found");
-    //     return 102;
-    // } else if (res.length > 1) {
-    //     console.log("multi-user error");
-    //     return 103;
-    // } else {
-    //     return res;
-    // }
+
+    let res = await user.find(temp2);
+    console.log(res.length)
+    if (res.length === 0) {
+        new Error("user not found");
+        return 102;
+    } else if (res.length > 1) {
+        console.log("multi-user error");
+        return 103;
+    } else {
+        console.log(res)
+        return res;
+    }
 
     //return 'succeed test!';
 

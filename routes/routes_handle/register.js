@@ -9,32 +9,37 @@ async function register(ctx, next) {
 
     let account = {
         name: ctx.request.body.name,
+        auth: ctx.request.body.auth,
         pwd: crypto.createHash('md5').update(ctx.request.body.pwd).digest('hex'),
+        email: ctx.request.body.email
     };
 
     if (FirstUse === 1) {
         let res = await createUser(null, account);
-        if (res === 100) {
-
-        } else if (res === 101) {
-
+        if (res.code === 101) {
+            ctx.body = res
+            let configfile = await fs.readFile('./config.json', 'utf-8')
+            let jsonFile = JSON.parse(configfile.toString())
+            jsonFile.firstUse = 0
+            await fs.writeFile('./config.json', JSON.stringify(jsonFile, null, '\t'))
+        } else if (res.code !== 101) {
+            console.log(res.msg)
+            ctx.body = res
         }
-        let configfile = await fs.readFile('../../config.json', 'utf-8')
-        let jsonFile = JSON.parse(configfile.toString())
-        jsonFile.firstUse = 1
-        let save_res = await fs.writeFile('./config.json', JSON.stringify(jsonFile, null, '\t'))
     } else {
         FirstUse = 0;
         let mainUser = {
-            name: (await verify.verifyToken(ctx, next)).name
+            email: (await verify.verifyToken(ctx, next)).email
         }
         let res = await createUser(mainUser, account);
-        if (res === 100) {
-
-        } else if (res === 101) {
-
+        if (res.code === 101) {
+            ctx.body = res
+        } else if (res.code !== 101) {
+            console.log(res.msg)
+            ctx.body = res
         }
     }
+    ctx.status = 200;
 }
 
 module.exports = register

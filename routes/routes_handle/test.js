@@ -11,7 +11,7 @@ let FirstUse = require('../../config').firstUse;
 
 async function test(ctx, next) {
     // let res = await mongoTest()
-    // console.log(res)
+    // //console.log(res.auth)
     // ctx.body = res
     // FirstUse = 0;
 
@@ -49,12 +49,22 @@ async function test(ctx, next) {
     // let dir = await fs.opendir('./')
     // for await (const dirent of dir)
     //     console.log(dirent.name);
-    let file = await fs.readFile('./config.json', 'utf-8')
-    let jsonFile = JSON.parse(file.toString())
-    jsonFile.firstUse = 1
-    let res = await fs.writeFile('./config.json',JSON.stringify(jsonFile,null,'\t'))
-    console.log(res)
+
+    // let file = await fs.readFile('./config.json', 'utf-8')
+    // let jsonFile = JSON.parse(file.toString())
+    // jsonFile.firstUse = 1
+    // let res = await fs.writeFile('./config.json',JSON.stringify(jsonFile,null,'\t'))
+    // console.log(res)
     // console.log(jsonFile.firstUse)
+
+    let a = {email: "123@ss.com"}
+    a.location = '/'+a.email
+    let res = await fs.mkdir('./storage'+a.location)
+    console.log(res === undefined)
+
+    // let list = await fs.readdir('./')
+    // for (const file of list)
+    //     console.log(file==='storage');
     ctx.status = 200;
 }
 

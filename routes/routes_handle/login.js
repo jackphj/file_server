@@ -4,7 +4,7 @@ const verify = require("../../components/id-verify");
 
 async function login(ctx, next) {
     let account = {
-        name: ctx.request.body.name
+        email: ctx.request.body.email
     };
     let pwd = crypto.createHash('md5').update(ctx.request.body.pwd).digest('hex');
     let res = await userCheck(account);

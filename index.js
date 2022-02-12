@@ -8,6 +8,7 @@ const jwt = require('koa-jwt');
 
 const router = require('./routes/router.js');
 const mongo = require('./components/mongo');
+const startUp = require('./components/firstStart')
 
 const PORT = require('./config').port;
 const SECRET = require('./config').tokenSECRET;
@@ -29,7 +30,7 @@ app
             }
         });
     })
-    .use(jwt({secret: SECRET, issuer: '公众号:龙之月'}).unless({path: ['/login','/register','/test']}))
+    .use(jwt({secret: SECRET, issuer: '公众号:龙之月'}).unless({path: ['/login', '/register', '/test']}))
     .use(bodyParser())
     .use(router.routes())
     .use(router.allowedMethods())
@@ -38,8 +39,9 @@ app
 //     await next();
 // })
 
-
 app.listen(PORT, () => {
-    console.log("File Server Succeed Run On %d!", PORT)
+    console.log("\033[35mFile Server Succeed Run On %d!\033[37m", PORT)
 });
 
+startUp().then(() => {
+})

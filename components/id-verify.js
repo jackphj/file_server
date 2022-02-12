@@ -13,11 +13,9 @@ async function generateToken(payload) {
 async function verifyToken(ctx) {
     let token = ctx.request.headers.authorization.split(' ')[1];
     let res = {};
-    //console.log(token)
     jwt.verify(token, SECRET, {issuer: '公众号:龙之月', algorithm: 'HS256'}, (err, decode) => {
         if (err) {
-            //console.log(err)
-            ctx.throw(401,'Verify Error');
+            ctx.throw(401, 'Verify Error');
         } else {
             delete decode.iat;
             delete decode.exp;
