@@ -10,9 +10,9 @@ let FirstUse = require('../../config').firstUse;
 
 
 async function test(ctx, next) {
-    let res = await mongoTest()
-    console.log(res.deletedCount)
-    ctx.body = res
+    // let res = await mongoTest()
+    // console.log(res.deletedCount)
+    // ctx.body = res
     // FirstUse = 0;
 
     // let account = {
@@ -62,7 +62,9 @@ async function test(ctx, next) {
     // let res = await fs.mkdir('./storage'+a.location)
     // console.log(res === undefined)
 
-    // let list = await fs.readdir('./')
+    let res = await fs.rmdir('./storage/12345678@126.com')
+    console.log(res)
+
     // for (const file of list)
     //     console.log(file==='storage');
     ctx.status = 200;

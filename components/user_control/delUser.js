@@ -1,4 +1,6 @@
+const fs = require('fs/promises')
 const user = require('../mongo').user
+
 
 /*@name:delUser
 * @usage:delete user and group
@@ -35,6 +37,25 @@ async function delUser(mainUser, userDel) {
                         res.code = 105;
                         res.msg = 'else error';
                     }
+
+                    if (res.code === 101) {
+                        let res1 = await fa.rmdir('./storage/' + resFindDel[0].email)
+                        if (res1 === undefined) {
+                            res.code = 101;
+                            res.msg = 'succeed delete';
+                        } else {
+                            let recover = new user(resFindDel[0]);
+                            let res1 = await recover.save();
+                            if (res1 === resFindDel[0]) {
+                                res.code = 106;
+                                res.msg = 'recover';
+                            } else {
+                                res.code = 105;
+                                res.msg = 'else error';
+                            }
+                        }
+                    }
+
                     let res2 = await user.deleteMany({group: resFindDel[0].email})
                     if (res2.deletedCount >= 0) {
                         res.code = 101;
@@ -43,6 +64,8 @@ async function delUser(mainUser, userDel) {
                         res.code = 105;
                         res.msg = 'else error';
                     }
+
+
                 } else if (resFindDel[0].auth !== 1) {                                                                  //delete else
                     let res1 = await user.deleteOne(userDel);
                     if (res1.deletedCount === 1) {
