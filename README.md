@@ -40,7 +40,7 @@
 
     server {
         listen 443;
-        server_name file.xxx.com;
+        server_name samllfile.xxx.com;
         
         ssl_certificate /location off ullchain.pem;
         ssl_certificate_key /location of privkey.pem;
