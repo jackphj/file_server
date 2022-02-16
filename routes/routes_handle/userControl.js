@@ -6,6 +6,7 @@ const verify = require("../../components/id-verify");
 * operate:
 *   1:list
 *   2:delete
+*   TODO:reset password
 *
 * {
 *   operate:1/2/...,

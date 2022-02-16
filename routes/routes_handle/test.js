@@ -11,10 +11,15 @@ let FirstUse = require('../../config').firstUse;
 var FormData = require('form-data');
 const busboy = require("busboy");
 
+const listDir = require('../../components/file_control/listDir')
+const newDir = require('../../components/file_control/newDir')
+
 function getRandomInt() {
     return Math.floor(Math.random() * 9999999);
 }
+
 let fileName = [];
+
 async function test(ctx, next) {
     // let res = await mongoTest()
     // console.log(res.deletedCount)
@@ -130,45 +135,45 @@ async function test(ctx, next) {
     //     }
     // }
 
-    const bb = busboy({headers: ctx.headers})
-
-    let i = 0;
-    bb.on('file', (name, file, info) => {
-        const {filename, encoding, mimeType} = info;
-        // console.log(info)
-        // console.log(
-        //     `File [${name}]: filename: %j, encoding: %j, mimeType: %j`,
-        //     filename,
-        //     encoding,
-        //     mimeType
-        // );
-
-        file.pipe(fs.createWriteStream('./temp/aaa/' + `busboy-upload-${getRandomInt()}`))
-        file
-            .on('data', (data) => {
-
-                console.log(`File [${name}] got ${data.length} bytes,上传。。。`);
-            })
-            .on('end', () => {
-                // fileName[i] = filename;
-                // i++;
-                // console.log(filename)
-                fileName[i++]=info.filename
-                console.log(`上传成功`);
-            });
-    });
-    bb.on('field', (name, val, info) => {
-        console.log(`Field [${name}]: value: %j`, val);
-    });
-    bb.on('finish', () => {
-        console.log('结束!');
-        console.log(fileName);
-        // ctx.status = 200;
-        // ctx.body = {code: 101, msg: 'upload'}
-        return {code: 101, msg: 'upload'}
-        // ctx.status=400
-    });
-    ctx.req.pipe(bb);
+    // const bb = busboy({headers: ctx.headers})
+    //
+    // let i = 0;
+    // bb.on('file', (name, file, info) => {
+    //     const {filename, encoding, mimeType} = info;
+    //     // console.log(info)
+    //     // console.log(
+    //     //     `File [${name}]: filename: %j, encoding: %j, mimeType: %j`,
+    //     //     filename,
+    //     //     encoding,
+    //     //     mimeType
+    //     // );
+    //
+    //     file.pipe(fs.createWriteStream('./temp/aaa/' + `busboy-upload-${getRandomInt()}`))
+    //     file
+    //         .on('data', (data) => {
+    //
+    //             console.log(`File [${name}] got ${data.length} bytes,上传。。。`);
+    //         })
+    //         .on('end', () => {
+    //             // fileName[i] = filename;
+    //             // i++;
+    //             // console.log(filename)
+    //             fileName[i++]=info.filename
+    //             console.log(`上传成功`);
+    //         });
+    // });
+    // bb.on('field', (name, val, info) => {
+    //     console.log(`Field [${name}]: value: %j`, val);
+    // });
+    // bb.on('finish', () => {
+    //     console.log('结束!');
+    //     console.log(fileName);
+    //     // ctx.status = 200;
+    //     // ctx.body = {code: 101, msg: 'upload'}
+    //     return {code: 101, msg: 'upload'}
+    //     // ctx.status=400
+    // });
+    // ctx.req.pipe(bb);
 
     // ctx.body = {code: 101, msg: 'upload'}
 
@@ -211,6 +216,8 @@ async function test(ctx, next) {
 
     // for (const file of list)
     //     console.log(file==='storage');
+
+    console.log(await newDir('./storage/12345678@126.com/test/aaa'))
 
 }
 

@@ -8,8 +8,8 @@ const register = require('./routes_handle/register')
 const userControl = require('./routes_handle/userControl')
 const smallfile = require('./routes_handle/samllfile')
 const largefile = require('./routes_handle/largefile')
-const fs = require("fs");
-
+const fileControl = require('./routes_handle/fileControl')
+const download = require('./routes_handle/download')
 const router = new Router();
 const multer = new Multer({dest: 'temp/', limits: {fileSize: 10 * 1024 * 1024}})
 
@@ -45,11 +45,15 @@ router
         await next();
     })
     .post('/largefile', async (ctx, next) => {
-
         await largefile(ctx, next);
         await next();
     })
-    .post('/file', async (ctx, next) => {
+    .post('/fileControl', async (ctx, next) => {
+        await fileControl(ctx, next);
+        await next();
+    })
+    .post('/download', async (ctx, next) => {
+        await download(ctx, next);
         await next();
     })
     .post('/test', async (ctx, next) => {

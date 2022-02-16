@@ -32,6 +32,7 @@ async function largefile(ctx, next) {
                 file.pipe(fs.createWriteStream(dir))
                 file
                     .on('data', (data) => {
+
                     })
                     .on('end', () => {
                         fileMsg[i++] = {
@@ -48,7 +49,6 @@ async function largefile(ctx, next) {
             bb.on('finish', () => {
                 if (mainUser[0].auth < 4 && mainUser[0].auth >= 1) {
                     let dir = (mainUser[0].auth === 1 ? mainUser[0].email : mainUser[0].group) + '/' + location;
-
                     for (let t = 0; t < fileMsg.length; t++) {
                         fs.copyFileSync(fileMsg[t].fileName, './storage/' + dir + fileMsg[t].originName);
                         console.log('save')
@@ -58,6 +58,7 @@ async function largefile(ctx, next) {
 
             });
             ctx.req.pipe(bb);
+
             ctx.status = 200;
             ctx.body = {
                 code: 101,
