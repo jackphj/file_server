@@ -3,22 +3,22 @@ const userCheck = require("../../components/user_control/userCheck");
 const listDir = require('../../components/file_control/listDir')
 const newDir = require('../../components/file_control/newDir')
 const moveFile = require('../../components/file_control/moveFile')
-const deleteFile = require('../../components/file_control/deleteFile')
-const deleteDir = require('../../components/file_control/deleteDir')
+const deleteFileDir = require('../../components/file_control/deleteFileDir')
+const shareFile = require('../../components/file_control/share/shareFile')
 
 /*@name:userControl
 * operate:
 *   1:list dir
 *   2:new dir
 *   3:move file
-*   4:delete file
-*   5:delete dir
+*   4:delete file/dir
+*   5:file share
 *   TODO:share link
 *
 * {
 *   operate:1/2/...,
 *   location:'aaaa/',
-*   file:''
+*   file:[]
 *   new_location:''
 * }
 * */
@@ -63,8 +63,11 @@ async function fileControl(ctx, next) {
                     }
                     case 3: {
                         if (mainUser[0].auth < 4) {
-                            let file = dir + ctx.request.body.file;
-                            let newLocation = './storage/' + dirBase + '/' + ctx.request.body.new_location + '/' + ctx.request.body.file;
+                            let file = [], newLocation = [];
+                            for (let i = 0; i < ctx.request.body.file.length; i++) {
+                                file[i] = dir + ctx.request.body.file[i];
+                                newLocation[i] = './storage/' + dirBase + '/' + ctx.request.body.new_location + '/' + ctx.request.body.file[i];
+                            }
                             ctx.body = await moveFile(file, newLocation);
                         } else {
                             ctx.body = {
@@ -76,8 +79,11 @@ async function fileControl(ctx, next) {
                     }
                     case 4: {
                         if (mainUser[0].auth < 4) {
-                            let file = dir + ctx.request.body.file;
-                            ctx.body = await deleteFile(file);
+                            let file = [];
+                            for (let i = 0; i < ctx.request.body.file.length; i++) {
+                                file[i] = dir + ctx.request.body.file[i];
+                            }
+                            ctx.body = await deleteFileDir(file);
                         } else {
                             ctx.body = {
                                 code: 104,
@@ -87,14 +93,15 @@ async function fileControl(ctx, next) {
                         break;
                     }
                     case 5: {
-                        if (mainUser[0].auth < 4) {
-                            ctx.body = await deleteDir(dir);
-                        } else {
-                            ctx.body = {
-                                code: 104,
-                                msg: 'auth error'
+                        let file = [];
+                        for (let i = 0; i < ctx.request.body.file.length; i++) {
+                            file[i] = {
+                                location: dir + ctx.request.body.file[i],
+                                name: ctx.request.body.file[i]
                             };
                         }
+                        console.log(file)
+                        console.log(await shareFile(file));
                         break;
                     }
                     default: {

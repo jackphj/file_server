@@ -2,6 +2,10 @@ const verify = require("../../components/id-verify");
 const userCheck = require("../../components/user_control/userCheck");
 const downloadFiles = require("../../components/file_control/downloadFiles")
 
+/*{
+    name:[]
+}*/
+
 async function download(ctx, next) {
     let account = {
         email: (await verify.verifyToken(ctx, next)).email,

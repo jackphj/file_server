@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-const fs = require('fs');
+const fs = require('fs/promises');
 
 const mongoTest = require('../../components/user_control/test')
 const userCheck = require("../../components/user_control/userCheck");
@@ -217,7 +217,17 @@ async function test(ctx, next) {
     // for (const file of list)
     //     console.log(file==='storage');
 
-    console.log(await newDir('./storage/12345678@126.com/test/aaa'))
+    // try {
+    //     await fs.access('./storage/12345678@qq.com/')
+    // } catch (e) {
+    //     console.log(e.code === "ENOENT");
+    // }
+    //
+    // let d = new Date()
+    // let r = new Date(d.setDate(d.getDate() - 17))
+    // console.log(r)
+    ctx.status = 200;
+
 
 }
 

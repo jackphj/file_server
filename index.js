@@ -1,14 +1,14 @@
-/*
-* 默认启动页
-* */
-
 const koa = require('koa');
 const bodyParser = require('koa-bodyparser');
 const jwt = require('koa-jwt');
+const scheduleHandle = require('./components/schedule')
+
 
 const router = require('./routes/router.js');
 const mongo = require('./components/mongo');
 const startUp = require('./components/firstStart')
+const schedule = require('node-schedule');
+
 
 const PORT = require('./config').port;
 const SECRET = require('./config').tokenSECRET;
@@ -34,7 +34,7 @@ app
         secret: SECRET,
         issuer: '公众号:龙之月'
     }).unless({
-        path: ['/login', '/register', '/test','/largefile']
+        path: ['/login', '/register', '/test']
     }))
     .use(bodyParser())
     .use(router.routes())
@@ -46,3 +46,8 @@ app.listen(PORT, () => {
 
 startUp().then(() => {
 })
+
+schedule.scheduleJob('*/15 * * * * *',async function (){
+    await scheduleHandle();
+    // console.log(new Date())
+});

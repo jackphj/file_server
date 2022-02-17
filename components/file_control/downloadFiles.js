@@ -1,6 +1,5 @@
 const fs = require('fs');
 const archiver = require('archiver');
-const send = require('koa-send')
 
 const archive = archiver('zip', {
     zlib: {level: 9} // Sets the compression level.
@@ -46,7 +45,7 @@ async function downloadFiles(ctx, files) {
         archive.pipe(zipStream);
         for (let i = 0; i < files.length; i++) {
             const file = fs.createReadStream(files[i].location)
-            archive.append(files[i].location, {name: files[i].name})
+            archive.append(file, {name: files[i].name})
         }
 
         await archive.finalize();
