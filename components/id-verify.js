@@ -35,7 +35,8 @@ async function generateShareToken(payload) {
 }
 
 async function verifyShareToken(ctx) {
-    let token = ctx.request.query.msg;
+    // let token = ctx.request.query.msg;
+    let token = ctx.request.headers.authorization.split(' ')[1];
     let res = {};
     jwt.verify(token, SECRET, {issuer: '公众号:龙之月', algorithm: 'HS256'}, (err, decode) => {
         if (err) {

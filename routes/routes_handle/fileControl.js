@@ -100,8 +100,8 @@ async function fileControl(ctx, next) {
                                 name: ctx.request.body.file[i]
                             };
                         }
-                        console.log(file)
-                        console.log(await shareFile(file));
+
+                        ctx.body = await shareFile(file);
                         break;
                     }
                     default: {

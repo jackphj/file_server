@@ -40,12 +40,10 @@ async function createUser(mainUser, newUserConfig) {
         } else {
             let resSave = await newUser.save()
             if (resSave === newUser) {
-                console.log('New User Created')
                 let mkdir = await fs.mkdir('./storage' + newUserConfig.location);
                 if (mkdir === undefined) {
                     res.code = 101;
-                    res.meg = 'New User Created';
-                    console.log('New User Created')
+                    res.meg = 'new user created';
                     return res;
                 } else {
                     res.code = 106;
@@ -55,7 +53,6 @@ async function createUser(mainUser, newUserConfig) {
             } else {
                 res.code = 106;
                 res.meg = 'else error';
-                console.log('new user save error')
                 return res;
             }
         }
@@ -66,30 +63,26 @@ async function createUser(mainUser, newUserConfig) {
         if (resFind.length === 0) {
             res.code = 102;
             res.meg = 'user not found';
-            console.log("user not found");
             return res;
         } else if (resFind.length > 1) {                            //check if main user goes wrong
             res.code = 102;
             res.meg = 'multi-user error';
-            console.log("multi-user error");
             return res;
         } else {
             //find if a user has same email address
             let checkMulti = {email: newUserConfig.email};
             let resFind_2 = await user.find(checkMulti);
             if (resFind_2.length !== 0) {
-                res.code = 104;
-                res.meg = 'email exist';
-                console.log('email exist');
+                res.code = 103;
+                res.meg = 'new user exist';
                 return res;
             } else {
                 if (resFind[0].auth < 1 || resFind[0].auth > 2 || resFind[0].auth > newUserConfig.auth) {               //user auth control
                     res.code = 105;
                     res.meg = 'no auth';
-                    console.log('权限不足 Insufficient permissions');
                     return res;
                 } else {
-                    if (newUserConfig.auth === 1 && resFind[0].auth) {                                                  //new user is admin(auth=1 create auth=1)
+                    if (newUserConfig.auth === 1 && resFind[0].auth===1) {                                                  //new user is admin(auth=1 create auth=1)
                         newUserConfig.group = 'admin';
                         newUserConfig.location = '/' + newUserConfig.email;
                     } else if (newUserConfig.auth !== 1 && resFind[0].auth < newUserConfig.auth) {                      //new user not admin(auth level higher create auth level lower)
@@ -98,19 +91,16 @@ async function createUser(mainUser, newUserConfig) {
                     } else {
                         res.code = 105;
                         res.meg = 'no auth';
-                        console.log('权限不足 Insufficient permissions');
                         return res;
                     }
                     let newUser = new user(newUserConfig);
                     let resSave = await newUser.save()
                     if (resSave === newUser) {
-                        console.log('New User Created')
                         if (newUserConfig.auth === 1) {
                             let mkdir = await fs.mkdir('./storage' + newUserConfig.location);
                             if (mkdir === undefined) {
                                 res.code = 101;
-                                res.meg = 'New User Created';
-                                console.log('New User Created')
+                                res.meg = 'new user created';
                                 return res;
                             } else {
                                 res.code = 106;
@@ -119,8 +109,7 @@ async function createUser(mainUser, newUserConfig) {
                             }
                         } else {
                             res.code = 101;
-                            res.meg = 'New User Created';
-                            console.log('New User Created')
+                            res.meg = 'new user created';
                             return res;
                         }
                     } else {

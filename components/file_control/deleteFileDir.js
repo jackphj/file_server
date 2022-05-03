@@ -11,7 +11,6 @@ async function deleteFileDir(file) {
             } catch (e) {
                 return {code: 103, msg: 'delete file/DIR error'};
             }
-
         } catch (e) {
             return {code: 102, msg: 'file/DIR not exist'};
         }

@@ -1,6 +1,7 @@
 const verify = require("../../components/id-verify");
 const userCheck = require("../../components/user_control/userCheck");
 const downloadFiles = require("../../components/file_control/downloadFiles")
+const fs = require('fs/promises');
 
 /*{
     name:[]
@@ -27,12 +28,22 @@ async function download(ctx, next) {
                 let dir = './storage/' + dirBase + '/' + location;
                 let files = [];
                 for (let i = 0; i < ctx.request.body.name.length; i++) {
+                    let file_location = dir + '/' + ctx.request.body.name[i].name
                     files[i] = {
-                        name: ctx.request.body.name[i],
-                        location: dir + '/' + ctx.request.body.name[i]
+                        name: ctx.request.body.name[i].name,
+                        dir : (await fs.stat(file_location)).isDirectory(),
+                        location: file_location
                     }
                 }
                 await downloadFiles(ctx, files);
+                // console.log(files)
+
+                // let downloadFilePath = await downloadFiles(ctx, files);
+                // if (downloadFilePath) {
+                //     ctx.body = fs.createReadStream('./temp/' + downloadFilePath.name)
+                //     ctx.set('Content-disposition', 'attachment; filename=' + downloadFilePath.name);
+                // }
+
             } else {
                 ctx.body = {
                     code: 102,

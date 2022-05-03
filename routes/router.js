@@ -9,6 +9,7 @@ const smallfile = require('./routes_handle/samllfile')
 const largefile = require('./routes_handle/largefile')
 const fileControl = require('./routes_handle/fileControl')
 const download = require('./routes_handle/download')
+const share = require('./routes_handle/share')
 const shareDownload = require('./routes_handle/shareDownload')
 
 const router = new Router();
@@ -58,10 +59,15 @@ router
         await next();
     })
     .post('/share', async (ctx, next) => {
+        await share(ctx, next);
+        await next();
+    })
+    .post('/shareDownload', async (ctx, next) => {
         await shareDownload(ctx, next);
         await next();
     })
-    .get('/test', async (ctx, next) => {
+    .post('/test', async (ctx, next) => {
+        console.log(ctx.request)
         await test(ctx, next);
         await next();
     })

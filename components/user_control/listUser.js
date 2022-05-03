@@ -30,7 +30,7 @@ async function listUser(mainUser) {
                     })
                 } else {
                     res.code = 103;
-                    return res;
+                    res.user = [];
                 }
                 let group2 = {group: "admin"}
                 let resFindUser2 = await user.find(group2)
@@ -46,25 +46,27 @@ async function listUser(mainUser) {
                     })
                 } else {
                     res.code = 103;
-                    return res;
+                    res.userAdmin = [];
                 }
-            }
-            let group = {group: resFind[0].auth === 1 ? resFind[0].email : resFind[0].group}
-            let resFindUser = await user.find(group)
-            if (resFindUser.length > 0) {
-                res.code = 101;
-                res.user = [];
-                resFindUser.forEach((element, index) => {
-                    res.user[index] = {
-                        name: element.name,
-                        auth: element.auth,
-                        email: element.email
-                    };
-                })
                 return res;
             } else {
-                res.code = 103;
-                return res;
+                let group = {group: resFind[0].auth === 1 ? resFind[0].email : resFind[0].group}
+                let resFindUser = await user.find(group)
+                if (resFindUser.length > 0) {
+                    res.code = 101;
+                    res.user = [];
+                    resFindUser.forEach((element, index) => {
+                        res.user[index] = {
+                            name: element.name,
+                            auth: element.auth,
+                            email: element.email
+                        };
+                    })
+                } else {
+                    res.code = 103;
+                    res.user = [];
+                }
+                return res
             }
         } else {
             res.code = 102;

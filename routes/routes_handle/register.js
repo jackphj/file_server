@@ -35,7 +35,7 @@ async function register(ctx, next) {
         if (res.code === 101) {
             ctx.body = res
         } else if (res.code !== 101) {
-            console.log(res.msg)
+            console.log(res.meg)
             ctx.body = res
         }
     }

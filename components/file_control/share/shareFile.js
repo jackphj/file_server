@@ -1,6 +1,6 @@
 const fs = require('fs/promises')
 const verify = require("../../../components/id-verify");
-const config = require("../../../config.json")
+// const config = require("../../../config.json")
 const shareMsg = require("./mongoShare")
 
 function getRandomInt() {
@@ -68,7 +68,7 @@ async function shareFile(files) {
                 let payload = {location: dir}
                 return {
                     code: 101,
-                    link: config.web_site + ':' + config.port + '/?msg=' + await verify.generateShareToken(payload)
+                    link: await verify.generateShareToken(payload)
                 };
             } else {
                 return {code: 102, msg: 'db error'};
