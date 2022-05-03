@@ -39,7 +39,7 @@ async function delUser(mainUser, userDel) {
                     }
 
                     if (res.code === 101) {
-                        let res1 = await fa.rmdir('./storage/' + resFindDel[0].email)
+                        let res1 = await fs.rmdir('./storage/' + resFindDel[0].email)
                         if (res1 === undefined) {
                             res.code = 101;
                             res.msg = 'succeed delete';
@@ -103,6 +103,7 @@ async function delUser(mainUser, userDel) {
             res.code = 102;
             res.msg = 'main user error';
         }
+        return res
     }
 
 }
